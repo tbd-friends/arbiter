@@ -1,4 +1,5 @@
 ﻿using System;
+using System.Threading.Tasks;
 
 namespace messaging.Contracts
 {
@@ -8,5 +9,8 @@ namespace messaging.Contracts
         void Send<TCommand>(Action<TCommand> builder) where TCommand : class, IRequest, new();
         TResult Send<TCommand, TResult>(TCommand command) where TCommand : class, IRequest<TResult>;
         TResult Send<TCommand, TResult>(Action<TCommand> builder) where TCommand : class, IRequest<TResult>, new();
+
+        Task Publish<TCommand>(Action<TCommand> builder)
+            where TCommand : class, IRequest, new();
     }
 }

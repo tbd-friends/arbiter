@@ -17,6 +17,8 @@ namespace commands.Handlers
         public void Handle(AddNumbers command)
         {
             int answer = command.Number1 + command.Number2;
+
+            Console.WriteLine(answer);
         }
     }
 }

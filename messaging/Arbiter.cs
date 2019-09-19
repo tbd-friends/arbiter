@@ -1,5 +1,6 @@
 ﻿using System;
 using System.Linq;
+using System.Threading.Tasks;
 using messaging.Contracts;
 
 namespace messaging
@@ -18,14 +19,11 @@ namespace messaging
         public void Send<TCommand>(TCommand command)
             where TCommand : class, IRequest
         {
-            var handlerTypes = _registry.GetHandlerTypesFor<TCommand>();
+            var handlerType = _registry.GetHandlerTypesFor<TCommand>().First();
 
-            foreach (var handlerType in handlerTypes)
-            {
-                var handler = (IHandleCommand<TCommand>)_resolver.Resolve(handlerType);
+            var handler = (IHandleCommand<TCommand>)_resolver.Resolve(handlerType);
 
-                handler.Handle(command);
-            }
+            handler.Handle(command);
         }
 
         public TResult Send<TCommand, TResult>(TCommand command)
@@ -56,6 +54,22 @@ namespace messaging
             builder(command);
 
             return Send<TCommand, TResult>(command);
+        }
+
+        public async Task Publish<TCommand>(Action<TCommand> builder)
+            where TCommand : class, IRequest, new()
+        {
+            TCommand command = new TCommand();
+
+            builder(command);
+
+            var handlerTypes = _registry.GetHandlerTypesFor<TCommand>();
+
+            var tasks = from ht in handlerTypes
+                        let handler = (IHandleCommand<TCommand>)_resolver.Resolve(ht)
+                        select Task.Run(() => handler.Handle(command));
+
+            await Task.WhenAll(tasks);
         }
     }
 }
