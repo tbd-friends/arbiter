@@ -2,9 +2,6 @@
 
   <PropertyGroup>
     <TargetFramework>netcoreapp2.2</TargetFramework>
-    <ApplicationIcon />
-    <OutputType>Exe</OutputType>
-    <StartupObject>test.Program</StartupObject>
   </PropertyGroup>
 
   <ItemGroup>
@@ -12,8 +9,6 @@
   </ItemGroup>
 
   <ItemGroup>
-    <ProjectReference Include="..\commands\commands.csproj" />
-    <ProjectReference Include="..\messaging.lamar\messaging.lamar.csproj" />
     <ProjectReference Include="..\messaging\messaging.csproj" />
   </ItemGroup>
 
