@@ -8,5 +8,6 @@ namespace messaging.Contracts
     {
         void Register(Assembly assembly);
         IEnumerable<Type> GetHandlerTypesFor<TCommand>();
+        IEnumerable<Type> GetHandlerTypesFor<TCommand, TResult>();
     }
 }

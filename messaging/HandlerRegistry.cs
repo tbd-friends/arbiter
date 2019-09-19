@@ -18,9 +18,9 @@ namespace messaging
         public void Register(Assembly assembly)
         {
             var registry = from t in assembly.GetTypes()
-                           let handlerOf = t.GetInterfaces().SingleOrDefault(i => i.IsGenericType &&
-                                                                                  i.GetGenericTypeDefinition() ==
-                                                                                  typeof(IHandleCommand<>))
+                           let handlerOf = t.GetInterfaces()
+                               .SingleOrDefault(i => i.IsGenericType && (i.GetGenericTypeDefinition() == typeof(IHandleCommand<>) ||
+                                                        (i.GetGenericTypeDefinition() == typeof(IHandleCommand<,>))))
                            where handlerOf != null
                            select new
                            {
@@ -49,6 +49,17 @@ namespace messaging
             }
 
             throw new Exception($"No handler is registered for {typeof(TCommand).Name}");
+        }
+
+        public IEnumerable<Type> GetHandlerTypesFor<TCommand, TResult>()
+        {
+            if (_handlers.ContainsKey(typeof(TCommand)))
+            {
+                return _handlers[typeof(TCommand)];
+            }
+
+            throw new Exception(
+                $"No handler is registered for {typeof(TCommand).Name} with result type {typeof(TResult).Name}");
         }
     }
 

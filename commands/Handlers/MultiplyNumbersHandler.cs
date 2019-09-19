@@ -4,11 +4,11 @@ using messaging.Contracts;
 
 namespace commands.Handlers
 {
-    public class MultiplyNumbersHandler : IHandleCommand<MultiplyNumbers>
+    public class MultiplyNumbersHandler : IHandleCommand<GetNumbersMultiplied, long>
     {
-        public void Handle(MultiplyNumbers command)
+        public long Handle(GetNumbersMultiplied command)
         {
-            Console.WriteLine($"{command.Number1 * command.Number2} is the answer!");
+            return command.Number1 * command.Number2;
         }
     }
 }
